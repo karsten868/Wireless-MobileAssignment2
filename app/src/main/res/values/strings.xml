@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Product Mnagement App</string>
+    <string name="receive_button">Receive Stocks</string>
+    <string name="ordering_button">Ordering Stocks</string>
 </resources>
