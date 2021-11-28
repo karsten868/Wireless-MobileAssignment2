@@ -10,6 +10,7 @@ public class ProductDatabaseHelper extends SQLiteOpenHelper {
     private static final int DB_VERSION = 1;
 
     ProductDatabaseHelper(Context context){
+
         super(context, DB_NAME, null, DB_VERSION);
     }
 
@@ -33,6 +34,9 @@ public class ProductDatabaseHelper extends SQLiteOpenHelper {
                     "PRICE REAL," +
                     "REORDERQUANTITY INTEGER," +
                     "REORDERAMOUNT INTEGER);");
+            insertProduct(db, "iphone 13 Pro", 500, 400, 1200, 50, 400);
+            insertProduct(db, "MacBook Pro", 700, 200, 7000, 100, 200);
+            insertProduct(db, "PS5", 1000, 500, 4000, 150, 500);
         }
     }
 
@@ -40,7 +44,7 @@ public class ProductDatabaseHelper extends SQLiteOpenHelper {
         ContentValues productValues = new ContentValues();
         productValues.put("NAME", name);
         productValues.put("STOCKINHAND", stockInHand);
-        productValues.put("STOCKINTRANSIT", stockInHand);
+        productValues.put("STOCKINTRANSIT", stockInTransit);
         productValues.put("PRICE", price);
         productValues.put("REORDERQUANTITY", reorderQuantity);
         productValues.put("REORDERAMOUNT", reorderAmount);

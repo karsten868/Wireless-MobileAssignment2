@@ -10,6 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ProductMnagementApp">
         <activity
+            android:name=".OrderFragmentActivity"
+            android:exported="true" />
+        <activity
             android:name=".TopLevelActivity"
             android:exported="true">
             <intent-filter>
