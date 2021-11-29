@@ -1,5 +1,6 @@
 package com.example.productmnagementapp;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -13,6 +14,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,8 +32,14 @@ public class OrderingFragment extends Fragment {
     private int stockInTransit;// = 40;
     private int recorderQuantity;// = 50;
     private int recorderAmt;// =60;
-    //public View view;
     public ArrayAdapter<String> adapter;
+    private int oldStockTransit;
+    private int newStockTransit;
+    public int temp;
+
+
+
+
     public OrderingFragment() {
         // Required empty public constructor
     }
@@ -65,6 +74,8 @@ public class OrderingFragment extends Fragment {
                 this.recorderQuantity = cursor.getInt(3);
                 this.recorderAmt = cursor.getInt(4);
             }
+            cursor.close();
+            db.close();
             String[] productList =
                 {name, Integer.toString(stockInHand), Integer.toString(stockInTransit), Integer.toString(recorderQuantity), Integer.toString(recorderAmt) };
            this.adapter = new ArrayAdapter<>(
@@ -97,12 +108,62 @@ public class OrderingFragment extends Fragment {
     public void onStart(){
         super.onStart();
         View v = getView();
-        TextView text = (TextView) v.findViewById(R.id.text);
+
         Spinner spinner = (Spinner) v.findViewById(R.id.products_spinner);
         spinner.setAdapter(adapter);
-        text.setText(name);
+        EditText product = (EditText) v.findViewById(R.id.name_text);
+
+        EditText stockAmt = (EditText) v.findViewById(R.id.amt_text);
+
+        Button button = (Button) v.findViewById(R.id.makeOrder_btn);
+        button.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                String productName = product.getText().toString();
+                int refillAmount = Integer.parseInt(stockAmt.getText().toString());
+
+
+                SQLiteOpenHelper productDatabaseHelper = new ProductDatabaseHelper(v.getContext());
+                try {
+                    SQLiteDatabase dbRead = productDatabaseHelper.getReadableDatabase();
+                    Cursor cursor = dbRead.query ("PRODUCT",
+                            new String[] {"STOCKINTRANSIT"},
+                            "NAME = ?",
+                            new String[] {productName},
+                            null, null, null);
+                    if(cursor.moveToFirst()) {
+                         temp= cursor.getInt(0);
+                    }
+                    oldStockTransit = temp;
+                    newStockTransit = oldStockTransit + refillAmount;
+                } catch(SQLiteException e) {
+                    Toast toast = Toast.makeText(v.getContext(), "Database unavailable", Toast.LENGTH_SHORT);
+                    toast.show();
+                }
+
+                ContentValues productValues = new ContentValues();
+                productValues.put("STOCKINTRANSIT", newStockTransit);
+
+                try {
+
+                    SQLiteDatabase db = productDatabaseHelper.getWritableDatabase();
+                    db.update("PRODUCT",
+                            productValues,
+                            "NAME = ?",
+                            new String[] {productName});
+                    db.close();
+                } catch(SQLiteException e) {
+                    Toast toast = Toast.makeText(v.getContext(), "Database unavailable", Toast.LENGTH_SHORT);
+                }
+
+            }
+        });
 
     }
+
+
 
 
 }

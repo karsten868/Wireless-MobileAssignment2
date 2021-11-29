@@ -2,6 +2,7 @@
     <string name="app_name">Product Mnagement App</string>
     <string name="receive_button">Receive Stocks</string>
     <string name="ordering_button">Ordering Stocks</string>
+    <string name="updateOrder_button">Make Order</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
