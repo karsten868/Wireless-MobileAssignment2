@@ -64,6 +64,8 @@ public class TopLevelActivity extends AppCompatActivity {
 
 
     public void onClickReceive(View view){
+        Intent intent = new Intent(this, ReceiveFragmentActivity.class);
+        startActivity(intent);
 
     }
 
